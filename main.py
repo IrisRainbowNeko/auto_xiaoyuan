@@ -1,11 +1,16 @@
 import time
 
+import argparse
 import cv2
 from sympy import Integer, Float, Rational
 
 from capture import WindowCapture
 from painter import Painter
 from solver import MathSolver
+
+import psutil
+p = psutil.Process()
+p.nice(psutil.REALTIME_PRIORITY_CLASS)
 
 
 def convert_to_python_type(sympy_number):
@@ -19,9 +24,13 @@ def convert_to_python_type(sympy_number):
         raise TypeError("Unsupported type")
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='agent argument')
+    parser.add_argument('--fast', action='store_true', default=False, help='更快的画结果，但电脑性能不足会不稳定')
+    args = parser.parse_args()
+
     capture = WindowCapture("雷电模拟器")
     solver = MathSolver()
-    painter = Painter(capture.window.left, capture.window.top)
+    painter = Painter(capture.window.left, capture.window.top, fast=args.fast)
 
     while True:
         mode = int(input('选择模式:'))

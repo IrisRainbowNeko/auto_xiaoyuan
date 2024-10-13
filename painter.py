@@ -2,13 +2,14 @@ from controller import MouseController
 
 
 class Painter:
-    def __init__(self, sx, sy):
+    def __init__(self, sx, sy, fast=False):
         self.mouse_ctrl = MouseController(sx + 140, sy + 850)
+        self.fast = fast
         self.num_path = {
             '.': [(40, 80), (40, 80)],
             '-': [(20, 50), (60, 50)],
             '0': [(40, 0), (0, 30), (0, 70), (40, 100), (80, 70), (80, 30), (40, 0)],
-            '1': [(0, 0), (0, 100)],
+            '1': [(40, 0), (40, 100)],
             '2': [(0, 30), (40, 0), (80, 30), (0, 100), (80, 100)],
             '3': [(0, 25), (40, 0), (80, 25), (30, 50), (80, 75), (40, 100), (0, 75)],
             '4': [(80, 50), (0, 50), (40, 0), (40, 100)],
@@ -35,7 +36,10 @@ class Painter:
                     self.mouse_ctrl.up((pos[0] + 100 * i + ofx, pos[1] + ofy))
                     self.mouse_ctrl.down((pos[2] + 100 * i + ofx, pos[3] + ofy))
                 else:
-                    self.mouse_ctrl.move_to(pos[0] + 100 * i + ofx, pos[1] + ofy, speed=10)
+                    if self.fast:
+                        self.mouse_ctrl.move_to_fast(pos[0] + 100 * i + ofx, pos[1] + ofy)
+                    else:
+                        self.mouse_ctrl.move_to(pos[0] + 100 * i + ofx, pos[1] + ofy, speed=10)
             self.mouse_ctrl.up((path[-1][0] + 100 * i + ofx, path[-1][1] + ofy))
 
     def paint_frac(self, num_str: str):

@@ -52,6 +52,22 @@ def move_mouse_to(to_x, to_y, speed=10):
     # 确保鼠标准确到达指定位置
     win32api.SetCursorPos((to_x, to_y))
 
+def move_mouse_to_fast(to_x, to_y):
+    # 获取屏幕分辨率
+    screen_width = win32api.GetSystemMetrics(0)
+    screen_height = win32api.GetSystemMetrics(1)
+
+    # 将像素坐标转换为绝对坐标
+    absolute_x = int(to_x * 65535 / screen_width)
+    absolute_y = int(to_y * 65535 / screen_height)
+
+    # 生成鼠标移动事件
+    win32api.mouse_event(win32con.MOUSEEVENTF_MOVE | win32con.MOUSEEVENTF_ABSOLUTE, absolute_x, absolute_y, 0, 0)
+
+    time.sleep(0.025)  # 控制鼠标移动速度
+    # 确保鼠标准确到达指定位置
+
+
 def mouse_up(x, y, button=MOUSE_LEFT):
     time.sleep(0.02)
     win32api.SetCursorPos((x, y))
@@ -104,6 +120,9 @@ class MouseController:
 
     def move_to(self, x, y, speed=10):
         move_mouse_to(x + self.ofx, y + self.ofy, speed)
+
+    def move_to_fast(self, x, y):
+        move_mouse_to_fast(x + self.ofx, y + self.ofy)
 
     def down(self, pos, button=MOUSE_RIGHT):
         mouse_down(pos[0] + self.ofx, pos[1] + self.ofy, button)
